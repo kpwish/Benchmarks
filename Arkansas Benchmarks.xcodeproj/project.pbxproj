@@ -1,0 +1,561 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		B320377E2EF8E29200F85315 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B32037652EF8E28E00F85315 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B320376C2EF8E28E00F85315;
+			remoteInfo = "Arkansas Benchmarks";
+		};
+		B32037882EF8E29200F85315 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B32037652EF8E28E00F85315 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B320376C2EF8E28E00F85315;
+			remoteInfo = "Arkansas Benchmarks";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		B320376D2EF8E28E00F85315 /* Arkansas Benchmarks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Arkansas Benchmarks.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B320377D2EF8E29200F85315 /* Arkansas BenchmarksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Arkansas BenchmarksTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B32037872EF8E29200F85315 /* Arkansas BenchmarksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Arkansas BenchmarksUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		B320376F2EF8E28E00F85315 /* Arkansas Benchmarks */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Arkansas Benchmarks";
+			sourceTree = "<group>";
+		};
+		B32037802EF8E29200F85315 /* Arkansas BenchmarksTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Arkansas BenchmarksTests";
+			sourceTree = "<group>";
+		};
+		B320378A2EF8E29200F85315 /* Arkansas BenchmarksUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Arkansas BenchmarksUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B320376A2EF8E28E00F85315 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B320377A2EF8E29200F85315 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B32037842EF8E29200F85315 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B32037642EF8E28E00F85315 = {
+			isa = PBXGroup;
+			children = (
+				B320376F2EF8E28E00F85315 /* Arkansas Benchmarks */,
+				B32037802EF8E29200F85315 /* Arkansas BenchmarksTests */,
+				B320378A2EF8E29200F85315 /* Arkansas BenchmarksUITests */,
+				B320376E2EF8E28E00F85315 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B320376E2EF8E28E00F85315 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B320376D2EF8E28E00F85315 /* Arkansas Benchmarks.app */,
+				B320377D2EF8E29200F85315 /* Arkansas BenchmarksTests.xctest */,
+				B32037872EF8E29200F85315 /* Arkansas BenchmarksUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B320376C2EF8E28E00F85315 /* Arkansas Benchmarks */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B32037912EF8E29200F85315 /* Build configuration list for PBXNativeTarget "Arkansas Benchmarks" */;
+			buildPhases = (
+				B32037692EF8E28E00F85315 /* Sources */,
+				B320376A2EF8E28E00F85315 /* Frameworks */,
+				B320376B2EF8E28E00F85315 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B320376F2EF8E28E00F85315 /* Arkansas Benchmarks */,
+			);
+			name = "Arkansas Benchmarks";
+			packageProductDependencies = (
+			);
+			productName = "Arkansas Benchmarks";
+			productReference = B320376D2EF8E28E00F85315 /* Arkansas Benchmarks.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B320377C2EF8E29200F85315 /* Arkansas BenchmarksTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B32037942EF8E29200F85315 /* Build configuration list for PBXNativeTarget "Arkansas BenchmarksTests" */;
+			buildPhases = (
+				B32037792EF8E29200F85315 /* Sources */,
+				B320377A2EF8E29200F85315 /* Frameworks */,
+				B320377B2EF8E29200F85315 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B320377F2EF8E29200F85315 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				B32037802EF8E29200F85315 /* Arkansas BenchmarksTests */,
+			);
+			name = "Arkansas BenchmarksTests";
+			packageProductDependencies = (
+			);
+			productName = "Arkansas BenchmarksTests";
+			productReference = B320377D2EF8E29200F85315 /* Arkansas BenchmarksTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B32037862EF8E29200F85315 /* Arkansas BenchmarksUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B32037972EF8E29200F85315 /* Build configuration list for PBXNativeTarget "Arkansas BenchmarksUITests" */;
+			buildPhases = (
+				B32037832EF8E29200F85315 /* Sources */,
+				B32037842EF8E29200F85315 /* Frameworks */,
+				B32037852EF8E29200F85315 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B32037892EF8E29200F85315 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				B320378A2EF8E29200F85315 /* Arkansas BenchmarksUITests */,
+			);
+			name = "Arkansas BenchmarksUITests";
+			packageProductDependencies = (
+			);
+			productName = "Arkansas BenchmarksUITests";
+			productReference = B32037872EF8E29200F85315 /* Arkansas BenchmarksUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B32037652EF8E28E00F85315 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					B320376C2EF8E28E00F85315 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					B320377C2EF8E29200F85315 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = B320376C2EF8E28E00F85315;
+					};
+					B32037862EF8E29200F85315 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = B320376C2EF8E28E00F85315;
+					};
+				};
+			};
+			buildConfigurationList = B32037682EF8E28E00F85315 /* Build configuration list for PBXProject "Arkansas Benchmarks" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B32037642EF8E28E00F85315;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B320376E2EF8E28E00F85315 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B320376C2EF8E28E00F85315 /* Arkansas Benchmarks */,
+				B320377C2EF8E29200F85315 /* Arkansas BenchmarksTests */,
+				B32037862EF8E29200F85315 /* Arkansas BenchmarksUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B320376B2EF8E28E00F85315 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B320377B2EF8E29200F85315 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B32037852EF8E29200F85315 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B32037692EF8E28E00F85315 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B32037792EF8E29200F85315 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B32037832EF8E29200F85315 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B320377F2EF8E29200F85315 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B320376C2EF8E28E00F85315 /* Arkansas Benchmarks */;
+			targetProxy = B320377E2EF8E29200F85315 /* PBXContainerItemProxy */;
+		};
+		B32037892EF8E29200F85315 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B320376C2EF8E28E00F85315 /* Arkansas Benchmarks */;
+			targetProxy = B32037882EF8E29200F85315 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		B320378F2EF8E29200F85315 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B32037902EF8E29200F85315 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B32037922EF8E29200F85315 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Arkansas Benchmarks/Preview Content\"";
+				DEVELOPMENT_TEAM = 383KGB77P3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show where you are on the map.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Wish.Arkansas-Benchmarks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B32037932EF8E29200F85315 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Arkansas Benchmarks/Preview Content\"";
+				DEVELOPMENT_TEAM = 383KGB77P3;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to show where you are on the map.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Wish.Arkansas-Benchmarks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B32037952EF8E29200F85315 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Wish.Arkansas-BenchmarksTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Arkansas Benchmarks.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Arkansas Benchmarks";
+			};
+			name = Debug;
+		};
+		B32037962EF8E29200F85315 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Wish.Arkansas-BenchmarksTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Arkansas Benchmarks.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Arkansas Benchmarks";
+			};
+			name = Release;
+		};
+		B32037982EF8E29200F85315 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Wish.Arkansas-BenchmarksUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Arkansas Benchmarks";
+			};
+			name = Debug;
+		};
+		B32037992EF8E29200F85315 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Wish.Arkansas-BenchmarksUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Arkansas Benchmarks";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B32037682EF8E28E00F85315 /* Build configuration list for PBXProject "Arkansas Benchmarks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B320378F2EF8E29200F85315 /* Debug */,
+				B32037902EF8E29200F85315 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B32037912EF8E29200F85315 /* Build configuration list for PBXNativeTarget "Arkansas Benchmarks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B32037922EF8E29200F85315 /* Debug */,
+				B32037932EF8E29200F85315 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B32037942EF8E29200F85315 /* Build configuration list for PBXNativeTarget "Arkansas BenchmarksTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B32037952EF8E29200F85315 /* Debug */,
+				B32037962EF8E29200F85315 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B32037972EF8E29200F85315 /* Build configuration list for PBXNativeTarget "Arkansas BenchmarksUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B32037982EF8E29200F85315 /* Debug */,
+				B32037992EF8E29200F85315 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B32037652EF8E28E00F85315 /* Project object */;
+}
