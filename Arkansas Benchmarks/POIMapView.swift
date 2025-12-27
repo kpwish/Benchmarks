@@ -9,18 +9,37 @@
 import SwiftUI
 import MapKit
 
+enum MapStyle: String, CaseIterable {
+    case standard
+    case satellite
+    case hybrid
+}
+
+enum MapZoomAction: Equatable {
+    case zoomIn
+    case zoomOut
+}
+
 struct POIMapView: UIViewRepresentable {
     let allPOIs: [POI]
 
     @Binding var selectedPOI: POI?
     @Binding var isFollowingUser: Bool
 
+    // NEW
+    @Binding var mapStyle: MapStyle
+    @Binding var zoomAction: MapZoomAction?
+
     func makeUIView(context: Context) -> MKMapView {
         let map = MKMapView(frame: .zero)
 
         map.delegate = context.coordinator
         map.showsUserLocation = true
-        map.userTrackingMode = .follow // follow initially
+        map.userTrackingMode = .follow
+
+        // Standard MapKit controls (HIG-friendly)
+        map.showsCompass = true
+        map.showsScale = true
 
         // Optional: hide Apple built-in POIs so yours stand out
         map.pointOfInterestFilter = .excludingAll
@@ -38,15 +57,32 @@ struct POIMapView: UIViewRepresentable {
         rotate.delegate = context.coordinator
         map.addGestureRecognizer(rotate)
 
+        context.coordinator.mapView = map
+        context.coordinator.applyMapStyle(mapStyle) // initial style
+
         return map
     }
 
     func updateUIView(_ map: MKMapView, context: Context) {
         context.coordinator.parent = self
+        context.coordinator.mapView = map
 
+        // Tracking mode
         let desiredMode: MKUserTrackingMode = isFollowingUser ? .follow : .none
         if map.userTrackingMode != desiredMode {
             map.setUserTrackingMode(desiredMode, animated: true)
+        }
+
+        // Apply map style if changed
+        context.coordinator.applyMapStyle(mapStyle)
+
+        // Perform zoom action if requested
+        if let action = zoomAction {
+            context.coordinator.performZoom(action)
+            // Reset the action to avoid repeating
+            DispatchQueue.main.async {
+                self.zoomAction = nil
+            }
         }
 
         context.coordinator.refreshAnnotations(for: map)
@@ -60,6 +96,7 @@ struct POIMapView: UIViewRepresentable {
 
     final class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
         var parent: POIMapView
+        weak var mapView: MKMapView?
 
         private var visibleIDs = Set<String>()
         private let poiReuseID = "POIMarker"
@@ -84,17 +121,67 @@ struct POIMapView: UIViewRepresentable {
             refreshAnnotations(for: mapView)
         }
 
+        // MARK: - Map Style
+
+        func applyMapStyle(_ style: MapStyle) {
+            guard let mapView else { return }
+
+            // Use MKMapConfiguration when available; falls back to mapType if desired.
+            switch style {
+            case .standard:
+                if #available(iOS 13.0, *) {
+                    mapView.preferredConfiguration = MKStandardMapConfiguration()
+                } else {
+                    mapView.mapType = .standard
+                }
+
+            case .satellite:
+                if #available(iOS 13.0, *) {
+                    mapView.preferredConfiguration = MKImageryMapConfiguration()
+                } else {
+                    mapView.mapType = .satellite
+                }
+
+            case .hybrid:
+                if #available(iOS 13.0, *) {
+                    mapView.preferredConfiguration = MKHybridMapConfiguration()
+                } else {
+                    mapView.mapType = .hybrid
+                }
+            }
+        }
+
+        // MARK: - Zoom
+
+        func performZoom(_ action: MapZoomAction) {
+            guard let mapView else { return }
+
+            var region = mapView.region
+
+            // Clamp deltas to avoid unusable extremes
+            let minDelta: CLLocationDegrees = 0.0005
+            let maxDelta: CLLocationDegrees = 90.0
+
+            let factor: CLLocationDegrees = (action == .zoomIn) ? 0.5 : 2.0
+
+            region.span.latitudeDelta = max(min(region.span.latitudeDelta * factor, maxDelta), minDelta)
+            region.span.longitudeDelta = max(min(region.span.longitudeDelta * factor, maxDelta), minDelta)
+
+            mapView.setRegion(region, animated: true)
+        }
+
+        // MARK: - Annotation Management
+
         func refreshAnnotations(for mapView: MKMapView) {
-            // Expand viewport to reduce annotation churn while panning.
             let visible = mapView.visibleMapRect
             let paddedRect = visible.insetBy(dx: -visible.size.width * 0.30,
                                              dy: -visible.size.height * 0.30)
 
             var nowVisibleIDs = Set<String>()
-            nowVisibleIDs.reserveCapacity(4000)
+            nowVisibleIDs.reserveCapacity(2000)
 
             var annotationsToAdd: [POIAnnotation] = []
-            annotationsToAdd.reserveCapacity(500)
+            annotationsToAdd.reserveCapacity(300)
 
             for poi in parent.allPOIs {
                 let point = MKMapPoint(poi.coordinate)
@@ -143,7 +230,7 @@ struct POIMapView: UIViewRepresentable {
 
             view.annotation = poiAnn
             view.canShowCallout = true
-            view.clusteringIdentifier = "poi-cluster" // always on
+            view.clusteringIdentifier = "poi-cluster"
 
             view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
             return view
