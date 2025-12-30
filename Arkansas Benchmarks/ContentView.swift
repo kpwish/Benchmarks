@@ -38,11 +38,15 @@ struct ContentView: View {
             .onAppear { locationManager.start() }
             .ignoresSafeArea()
             .sheet(item: $selectedPOI) { poi in
-                POIDetailView(poi: poi)
+                POIDetailView(poi: poi, locationManager: locationManager)
             }
             .sheet(isPresented: $showingFilters) {
                 FiltersView(options: filterOptions, filters: $filters)
                     .presentationDetents([.medium, .large])
+            }
+            .sheet(item: $selectedPOI) { poi in
+                POIDetailView(poi: poi, locationManager: locationManager)
+                    .environmentObject(locationManager)
             }
 
             // Overlay layout:
