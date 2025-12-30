@@ -12,7 +12,7 @@ struct POIDetailView: View {
                 header
 
                 if hasRecoveryInfo {
-                    Section("Recovery") {
+                    Section("Most Recent Recovery") {
                         labeledRow("Last recovered", value: poi.lastRecoveredYear.map(String.init))
                         labeledRow("Condition", value: poi.lastCondition)
                         labeledRow("Recovered by", value: poi.lastRecoveredBy)
