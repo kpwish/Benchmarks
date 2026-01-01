@@ -36,12 +36,16 @@ struct FiltersView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("marker") {
-                    MultiSelectList(values: options.markers, selection: $markers)
-                }
-
-                Section("setting") {
-                    MultiSelectList(values: options.settings, selection: $settings)
+                
+                Section {
+                    Button("Clear Filters") {
+                        markers = []
+                        settings = []
+                        lastConditions = []
+                        minYearText = ""
+                        maxYearText = ""
+                    }
+                    .foregroundStyle(.red)
                 }
 
                 Section("last_cond") {
@@ -81,16 +85,14 @@ struct FiltersView: View {
                     }
                 }
 
-                Section {
-                    Button("Clear Filters") {
-                        markers = []
-                        settings = []
-                        lastConditions = []
-                        minYearText = ""
-                        maxYearText = ""
-                    }
-                    .foregroundStyle(.red)
+                Section("marker") {
+                    MultiSelectList(values: options.markers, selection: $markers)
                 }
+
+                Section("setting") {
+                    MultiSelectList(values: options.settings, selection: $settings)
+                }
+
             }
             .navigationTitle("Filters")
             .navigationBarTitleDisplayMode(.inline)
