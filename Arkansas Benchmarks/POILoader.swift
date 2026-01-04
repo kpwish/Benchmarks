@@ -23,7 +23,16 @@ enum POILoader {
             return []
         }
     }
-
+    static func loadCSVFromFile(url: URL) -> [POI] {
+        do {
+            let text = try String(contentsOf: url, encoding: .utf8)
+            return parseCSV(text)
+        } catch {
+            print("Failed to read CSV at \(url): \(error)")
+            return []
+        }
+    }
+    
     /// Parses CSV with:
     /// - header-based column lookup (supports both old and new schemas)
     /// - quoted field support (commas inside quotes)

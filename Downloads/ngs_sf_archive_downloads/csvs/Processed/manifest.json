@@ -1,0 +1,414 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-01-03",
+  "states": [
+    {
+      "code": "AL",
+      "name": "Alabama",
+      "version": "2026-01-02",
+      "bytes": 3336211,
+      "sha256": "68ce776a6ec34b1ae4af4adcf8deba87426c2e057b95a03f53b55688f4a360e4",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_AL_20260102.csv"
+    },
+    {
+      "code": "AK",
+      "name": "Alaska",
+      "version": "2026-01-02",
+      "bytes": 5305289,
+      "sha256": "15da5806e86c82b53af6024b9fe1efa5f2e42c4bc5c6b368d101fda494b90988",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_AK_20260102.csv"
+    },
+    {
+      "code": "AZ",
+      "name": "Arizona",
+      "version": "2026-01-02",
+      "bytes": 3871417,
+      "sha256": "7fbce81c4465b96f45ae6728e92d0be52110f43192510ed83ddbab349cfb4af6",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_AZ_20260102.csv"
+    },
+    {
+      "code": "AR",
+      "name": "Arkansas",
+      "version": "2026-01-02",
+      "bytes": 2358859,
+      "sha256": "22d7741ed753fcb95e8bf768ec57fa6ba8147153f0be6257ebce317080c88124",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_AR_20260102.csv"
+    },
+    {
+      "code": "CA",
+      "name": "California",
+      "version": "2026-01-02",
+      "bytes": 12968611,
+      "sha256": "3da10cf11ca5adc887a9ad618738efccca20ff224e6912ef96529bd7cd2d7fde",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_CA_20260102.csv"
+    },
+    {
+      "code": "CO",
+      "name": "Colorado",
+      "version": "2026-01-03",
+      "bytes": 2630424,
+      "sha256": "a3aaf8b76dfe6f6b26507f8d7c359bb11b9eb2940a904f7ae3587d3b2fe254c8",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_CO_20260103.csv"
+    },
+    {
+      "code": "CT",
+      "name": "Connecticut",
+      "version": "2026-01-03",
+      "bytes": 902711,
+      "sha256": "ad154f4648aeb265cb35aeed47a4d0929e6be0dcd70443bebd617bff2f6b3a67",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_CT_20260103.csv"
+    },
+    {
+      "code": "DE",
+      "name": "Delaware",
+      "version": "2026-01-03",
+      "bytes": 320955,
+      "sha256": "2c92c8d3e3e110f8cd4002c20bb2fb442d70f8b8a3616e4b9edd40dd85f8fdc3",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_DE_20260103.csv"
+    },
+    {
+      "code": "DC",
+      "name": "District of Columbia",
+      "version": "2026-01-03",
+      "bytes": 204633,
+      "sha256": "63e291e0db191a3348b49218442c124fe40fb35c56f28ffb1ef23f8fd49ee2fa",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_DC_20260103.csv"
+    },
+    {
+      "code": "FL",
+      "name": "Florida",
+      "version": "2026-01-03",
+      "bytes": 11080822,
+      "sha256": "f0fd089e063a9a0c32b8fa962cfc1f832bc7e1678d0b32eedc7022b195790e69",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_FL_20260103.csv"
+    },
+    {
+      "code": "GA",
+      "name": "Georgia",
+      "version": "2026-01-03",
+      "bytes": 3556387,
+      "sha256": "bd2a14992a13bab618bfe1a091327d378bf3ba312548315c8bbc1d13c3097ae3",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_GA_20260103.csv"
+    },
+    {
+      "code": "HI",
+      "name": "Hawaii",
+      "version": "2026-01-03",
+      "bytes": 704223,
+      "sha256": "0f6fb22d31862b325a1ec9225edb2c1e8fd5e926f4480ff2e0451ef67db7612c",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_HI_20260103.csv"
+    },
+    {
+      "code": "ID",
+      "name": "Idaho",
+      "version": "2026-01-03",
+      "bytes": 2866267,
+      "sha256": "00d099d2a7a3c8a279ee800d2011be079eda3df5fefca38a37dcc0a6a41c3b52",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_ID_20260103.csv"
+    },
+    {
+      "code": "IL",
+      "name": "Illinois",
+      "version": "2026-01-03",
+      "bytes": 3655466,
+      "sha256": "c9f5b6f06e9ad0202a225bf52e46948f80bb2a44885bbf8ffd2e356f3067f532",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_IL_20260103.csv"
+    },
+    {
+      "code": "IN",
+      "name": "Indiana",
+      "version": "2026-01-03",
+      "bytes": 2395156,
+      "sha256": "552ff046d45e78b02d5a84f5dd47ae044538ad19c356fc869e7552d9f4626b97",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_IN_20260103.csv"
+    },
+    {
+      "code": "IA",
+      "name": "Iowa",
+      "version": "2026-01-03",
+      "bytes": 1445298,
+      "sha256": "b9aca15546bccf190f3041104572e358e25ff8f34d72e31c8aa570600d7f22d4",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_IA_20260103.csv"
+    },
+    {
+      "code": "KS",
+      "name": "Kansas",
+      "version": "2026-01-03",
+      "bytes": 2238511,
+      "sha256": "0381821f80e6c0572e76add6f8e10746890b24cbd18322602d6d943d91e0f5de",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_KS_20260103.csv"
+    },
+    {
+      "code": "KY",
+      "name": "Kentucky",
+      "version": "2026-01-03",
+      "bytes": 2700835,
+      "sha256": "bbe629452a81b5b8f5ef947458f8743fbea94859b4d053468ef8d92b743ede60",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_KY_20260103.csv"
+    },
+    {
+      "code": "LA",
+      "name": "Louisiana",
+      "version": "2026-01-03",
+      "bytes": 4233210,
+      "sha256": "262bb51567e191d86db9343512c943d1a401308c6a8a2f1ee8d06c47b8fe0dad",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_LA_20260103.csv"
+    },
+    {
+      "code": "ME",
+      "name": "Maine",
+      "version": "2026-01-02",
+      "bytes": 1874449,
+      "sha256": "76ce20d5327840a1e0f7f3792a97d589ebc4a5e1f690098999596927dd19531b",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_ME_20260102.csv"
+    },
+    {
+      "code": "MD",
+      "name": "Maryland",
+      "version": "2026-01-02",
+      "bytes": 2632093,
+      "sha256": "18ff2d69c43566394801d8a57f3cc032f071b46aeddaa9bb79c0b9586c9810a6",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_MD_20260102.csv"
+    },
+    {
+      "code": "MA",
+      "name": "Massachusetts",
+      "version": "2026-01-02",
+      "bytes": 1275032,
+      "sha256": "d02da84e9bb1a8a90348639a59a7aa71c82935ad3db4a59c77bc38ddde78f459",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_MA_20260102.csv"
+    },
+    {
+      "code": "MI",
+      "name": "Michigan",
+      "version": "2026-01-03",
+      "bytes": 2718670,
+      "sha256": "f8a4b2bb0e59a401291bbdd7c4fde144a6861419725fe7684c6ebc89bdd45237",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_MI_20260103.csv"
+    },
+    {
+      "code": "MN",
+      "name": "Minnesota",
+      "version": "2026-01-03",
+      "bytes": 7921626,
+      "sha256": "4aaa8526b387e30f982c19f0968be1de3c205eda53e65d2ee7811306329b1063",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_MN_20260103.csv"
+    },
+    {
+      "code": "MS",
+      "name": "Mississippi",
+      "version": "2026-01-02",
+      "bytes": 2565790,
+      "sha256": "6a46df91bd291e829d50b5d026c9468e0a3ad57cc237c9333ae91920e120ea20",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_MS_20260102.csv"
+    },
+    {
+      "code": "MO",
+      "name": "Missouri",
+      "version": "2026-01-02",
+      "bytes": 2654556,
+      "sha256": "03c47e48c251e77467ee843ad0a3d3a1c8ada8d62f45f59295a02cd0ac9eb2d3",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_MO_20260102.csv"
+    },
+    {
+      "code": "MT",
+      "name": "Montana",
+      "version": "2026-01-02",
+      "bytes": 3363331,
+      "sha256": "c024095ce0306f05aa40a1c1e9f8866c8f5b106abc8ed2dd295a7be120c081fc",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_MT_20260102.csv"
+    },
+    {
+      "code": "NE",
+      "name": "Nebraska",
+      "version": "2026-01-02",
+      "bytes": 2091004,
+      "sha256": "be8a6438d544f8c5693f530245053d41f5c7b2aefc97ff98fa7370f520ecfe45",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_NE_20260102.csv"
+    },
+    {
+      "code": "NV",
+      "name": "Nevada",
+      "version": "2026-01-03",
+      "bytes": 2612273,
+      "sha256": "4476380315cb450511637b6420c9c79ab18f8dd0b4090c6ea5c5f569c09daeb6",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_NV_20260103.csv"
+    },
+    {
+      "code": "NH",
+      "name": "New Hampshire",
+      "version": "2026-01-03",
+      "bytes": 345515,
+      "sha256": "8efcefd40b20bda22fed6b7b126d051201b57543a7b3c09dcb28c16f11614d89",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_NH_20260103.csv"
+    },
+    {
+      "code": "NJ",
+      "name": "New Jersey",
+      "version": "2026-01-03",
+      "bytes": 1659024,
+      "sha256": "9a7a384da34ff5aa2d09a79c5296840dc827a5105a0e215832f42acb322ecf2a",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_NJ_20260103.csv"
+    },
+    {
+      "code": "NM",
+      "name": "New Mexico",
+      "version": "2026-01-02",
+      "bytes": 3076365,
+      "sha256": "76652dbb2ee040eb00b863c34361612f2f179e444ed0b65157da1f92a677fb6c",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_NM_20260102.csv"
+    },
+    {
+      "code": "NY",
+      "name": "New York",
+      "version": "2026-01-03",
+      "bytes": 4580110,
+      "sha256": "c6f8754ffc9b6dfae377ca5516a9f733d1dd2b92bad1e70b9631feb5f3c275c1",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_NY_20260103.csv"
+    },
+    {
+      "code": "NC",
+      "name": "North Carolina",
+      "version": "2026-01-03",
+      "bytes": 8378249,
+      "sha256": "f76182bac1f8d6c5567cbdf5db157555e1e099579450643d9b6f869b32e83e48",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_NC_20260103.csv"
+    },
+    {
+      "code": "ND",
+      "name": "North Dakota",
+      "version": "2026-01-03",
+      "bytes": 2713176,
+      "sha256": "c8bb7eceb6b6f57a5953e360e438aa907257cfa4a6c7de13c2c128a39d03e515",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_ND_20260103.csv"
+    },
+    {
+      "code": "OH",
+      "name": "Ohio",
+      "version": "2026-01-03",
+      "bytes": 3053817,
+      "sha256": "937d7eb916a84d1dde0fed581dad043e6ff6a705b67781ee40d29fd825c14fa9",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_OH_20260103.csv"
+    },
+    {
+      "code": "OK",
+      "name": "Oklahoma",
+      "version": "2026-01-03",
+      "bytes": 1480892,
+      "sha256": "db8cb5f1e9c550230c0dc7945042cc2b4a9d7492ac094d483162e0d5c82c8fa0",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_OK_20260103.csv"
+    },
+    {
+      "code": "OR",
+      "name": "Oregon",
+      "version": "2026-01-03",
+      "bytes": 3893300,
+      "sha256": "c232c1fe04321e49ae1932af9a1520b50249ab9a6ea6b5f2834951da6e19f8dd",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_OR_20260103.csv"
+    },
+    {
+      "code": "PA",
+      "name": "Pennsylvania",
+      "version": "2026-01-03",
+      "bytes": 3318867,
+      "sha256": "714b6cbdf2d009df5fd4c1e5f9d32e8ac42b483ef804b1b7939da767dd2503d9",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_PA_20260103.csv"
+    },
+    {
+      "code": "RI",
+      "name": "Rhode Island",
+      "version": "2026-01-03",
+      "bytes": 464582,
+      "sha256": "c93a511c4f6a1cfa68eac481d6395401d7e57aa2b6e2b0bcab28307a7c123805",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_RI_20260103.csv"
+    },
+    {
+      "code": "SC",
+      "name": "South Carolina",
+      "version": "2026-01-03",
+      "bytes": 3734615,
+      "sha256": "924ebc24a5084049e6fd7bad00fb445deb3c1922b23b37236f271c32bcde7113",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_SC_20260103.csv"
+    },
+    {
+      "code": "SD",
+      "name": "South Dakota",
+      "version": "2026-01-03",
+      "bytes": 2799871,
+      "sha256": "5ef457e8df9c479029a31bee1d58c1f147de40bf44a3ddb5a599fe8e27145d67",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_SD_20260103.csv"
+    },
+    {
+      "code": "TN",
+      "name": "Tennessee",
+      "version": "2026-01-03",
+      "bytes": 2510474,
+      "sha256": "aa3c19f7ec4749267cac1bb226af8f5a022ae1e625b4e5b3a7c1680eb5a9c35a",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_TN_20260103.csv"
+    },
+    {
+      "code": "TX",
+      "name": "Texas",
+      "version": "2026-01-03",
+      "bytes": 10002571,
+      "sha256": "ec6d926c9c53e3d24179e1e0c008c3ed83343327e340b334272947fca2bf5a07",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_TX_20260103.csv"
+    },
+    {
+      "code": "UT",
+      "name": "Utah",
+      "version": "2026-01-03",
+      "bytes": 1544542,
+      "sha256": "d46d1abd369627b8c28867b4cad4f791f264b0a4d9b01ba82b05c83ada75aca4",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_UT_20260103.csv"
+    },
+    {
+      "code": "VT",
+      "name": "Vermont",
+      "version": "2026-01-03",
+      "bytes": 733166,
+      "sha256": "55bf8a54f403638e2d64a46ee10f1f4da662f50a8afcec679ea7e1b813fca911",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_VT_20260103.csv"
+    },
+    {
+      "code": "VA",
+      "name": "Virginia",
+      "version": "2026-01-03",
+      "bytes": 4245565,
+      "sha256": "aab8cf9f0e9e20e3c62f52a0230acf2b43c76b471ae4488a7ea161afbfa0b59f",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_VA_20260103.csv"
+    },
+    {
+      "code": "WA",
+      "name": "Washington",
+      "version": "2026-01-03",
+      "bytes": 4260290,
+      "sha256": "6085b51cbaee9222933e8c3969cfb642a8874eddd461e96ab347c7680534d539",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_WA_20260103.csv"
+    },
+    {
+      "code": "WV",
+      "name": "West Virginia",
+      "version": "2026-01-03",
+      "bytes": 1726115,
+      "sha256": "212c4efa387d0ffecf8772f0d68350d907512f92df432aec7b5029228c22975a",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_WV_20260103.csv"
+    },
+    {
+      "code": "WI",
+      "name": "Wisconsin",
+      "version": "2026-01-03",
+      "bytes": 3024601,
+      "sha256": "75ad4c2a3e8b6a14b92f9604476c85403b445558ed68b37c7108c5c7befd7494",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_WI_20260103.csv"
+    },
+    {
+      "code": "WY",
+      "name": "Wyoming",
+      "version": "2026-01-03",
+      "bytes": 1714310,
+      "sha256": "6b7449a03fb09ace60894a10689b0f07bd0994f4554657d4792a9b18d9fe2b64",
+      "url": "https://github.com/kpwish/Benchmarks/releases/latest/download/pois_WY_20260103.csv"
+    }
+  ]
+}

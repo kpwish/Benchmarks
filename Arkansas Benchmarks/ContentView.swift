@@ -4,7 +4,20 @@ import UIKit
 struct ContentView: View {
     @StateObject private var locationManager = LocationManager()
 
-    @State private var pois: [POI] = POILoader.loadCSVFromBundle(named: "pois", ext: "csv")
+    // IMPORTANT: GitHub Releases manifest URL
+    private static let manifestURL = URL(string: "https://github.com/kpwish/Benchmarks/releases/latest/download/manifest.json")!
+
+    // Download manager lives here (top-level), so Settings and Info can reference it.
+    @StateObject private var statePacks = StatePackManager(
+        manifestURL: ContentView.manifestURL,
+        maxActiveStates: 2,
+        bundledPacks: [
+            BundledStatePack(code: "AR", name: "Arkansas", resourceName: "pois", ext: "csv")
+        ]
+    )
+
+    // Fallback (immediate display) while state packs load.
+    @State private var bundledArkansasPOIs: [POI] = POILoader.loadCSVFromBundle(named: "pois", ext: "csv")
 
     @State private var selectedPOI: POI?
     @State private var isFollowingUser = true
@@ -36,6 +49,16 @@ struct ContentView: View {
                 locationManager.start()
                 applyIdleTimerSetting()
             }
+            .task {
+                // Ensure at least AR is active for a good first-run experience.
+                statePacks.ensureDefaultActiveStateIfEmpty(defaultCode: "AR")
+
+                // Load whatever the user previously selected (max 2 enforced).
+                await statePacks.loadPersistedActiveStates()
+
+                // Preload manifest so Downloads is populated quickly.
+                await statePacks.refreshManifest()
+            }
             .ignoresSafeArea()
             .sheet(item: $selectedPOI) { poi in
                 POIDetailView(poi: poi, locationManager: locationManager)
@@ -50,7 +73,7 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showingSettings) {
                 settingsSheet
-                    .presentationDetents([.medium])
+                    .presentationDetents([.medium, .large])
             }
             .onChange(of: keepScreenAwake) { _, _ in
                 applyIdleTimerSetting()
@@ -87,6 +110,14 @@ struct ContentView: View {
         }
     }
 
+    // MARK: - POI source
+
+    private var pois: [POI] {
+        // Prefer active state packs once loaded; fallback to bundled AR for immediate display.
+        let union = statePacks.activePOIsUnion
+        return union.isEmpty ? bundledArkansasPOIs : union
+    }
+
     // MARK: - Full-width Bottom Pill Row (icons only)
 
     private var bottomPillRowFullWidth: some View {
@@ -98,21 +129,13 @@ struct ContentView: View {
             divider
 
             Menu {
-                Button {
-                    mapStyle = .standard
-                } label: {
+                Button { mapStyle = .standard } label: {
                     Label("Standard", systemImage: mapStyle == .standard ? "checkmark" : "")
                 }
-
-                Button {
-                    mapStyle = .satellite
-                } label: {
+                Button { mapStyle = .satellite } label: {
                     Label("Satellite", systemImage: mapStyle == .satellite ? "checkmark" : "")
                 }
-
-                Button {
-                    mapStyle = .hybrid
-                } label: {
+                Button { mapStyle = .hybrid } label: {
                     Label("Hybrid", systemImage: mapStyle == .hybrid ? "checkmark" : "")
                 }
             } label: {
@@ -219,6 +242,18 @@ struct ContentView: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
+
+                Section("Data") {
+                    NavigationLink {
+                        DownloadsView(manager: statePacks)
+                    } label: {
+                        Label("Downloads", systemImage: "arrow.down.circle")
+                    }
+
+                    Text("Download one or more states, and keep up to two active at a time to limit memory usage.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
@@ -254,6 +289,11 @@ struct ContentView: View {
                     } else {
                         row("Loaded", value: "\(pois.count)")
                     }
+                }
+
+                Section("Data Packs") {
+                    row("Active states", value: statePacks.activeStates.isEmpty ? "None" : statePacks.activeStates.joined(separator: ", "))
+                    row("Active limit", value: "\(statePacks.maxActiveStates)")
                 }
 
                 if filters.isActive {
