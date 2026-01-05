@@ -80,6 +80,18 @@ struct ContentView: View {
                 applyIdleTimerSetting()
             }
 
+            // TOP LEGEND
+            if !priorityOnlyEnabled {
+                VStack {
+                    legendView
+                        .padding(.top, 10)
+                        .padding(.horizontal, 12)
+
+                    Spacer()
+                }
+            }
+
+            // Existing bottom controls
             VStack {
                 Spacer()
 
@@ -100,6 +112,35 @@ struct ContentView: View {
                 .padding(.horizontal, 12)
                 .padding(.bottom, 22)
             }
+        }
+    }
+
+    // MARK: - Legend (top of screen)
+
+    private var legendView: some View {
+        HStack(spacing: 12) {
+            legendItem(color: .red, text: "Standard")
+            legendItem(color: .blue, text: "Priority")
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(.ultraThinMaterial)
+        .clipShape(Capsule())
+        .overlay(
+            Capsule().strokeBorder(.separator, lineWidth: 0.5)
+        )
+        .shadow(radius: 2)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Legend. Standard pins are red. Priority pins are blue.")
+    }
+
+    private func legendItem(color: Color, text: String) -> some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(color)
+                .frame(width: 10, height: 10)
+            Text(text)
+                .font(.footnote.weight(.semibold))
         }
     }
 

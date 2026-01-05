@@ -86,6 +86,7 @@ struct POIMapView: UIViewRepresentable {
 
         private var visibleIDs = Set<String>()
         private let poiReuseID = "POIMarker"
+        private let clusterReuseID = "Cluster"
 
         init(parent: POIMapView) {
             self.parent = parent
@@ -187,12 +188,31 @@ struct POIMapView: UIViewRepresentable {
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             if annotation is MKUserLocation { return nil }
 
+            // CLUSTER VIEW (tint blue if any member is priority)
             if let cluster = annotation as? MKClusterAnnotation {
-                let view = MKMarkerAnnotationView(annotation: cluster, reuseIdentifier: "Cluster")
+                let view = (mapView.dequeueReusableAnnotationView(withIdentifier: clusterReuseID) as? MKMarkerAnnotationView)
+                    ?? MKMarkerAnnotationView(annotation: cluster, reuseIdentifier: clusterReuseID)
+
+                view.annotation = cluster
                 view.canShowCallout = true
+
+                let hasPriorityMember = cluster.memberAnnotations.contains { member in
+                    guard let poiAnn = member as? POIAnnotation else { return false }
+                    return parent.priorityPIDs.contains(poiAnn.poi.pid.uppercased())
+                }
+
+                if hasPriorityMember {
+                    view.markerTintColor = .systemBlue
+                    view.glyphImage = UIImage(systemName: "star.fill")
+                } else {
+                    view.markerTintColor = nil
+                    view.glyphImage = nil
+                }
+
                 return view
             }
 
+            // INDIVIDUAL POI VIEW
             guard let poiAnn = annotation as? POIAnnotation else { return nil }
 
             let view = (mapView.dequeueReusableAnnotationView(withIdentifier: poiReuseID) as? MKMarkerAnnotationView)
@@ -203,7 +223,6 @@ struct POIMapView: UIViewRepresentable {
             view.clusteringIdentifier = "poi-cluster"
             view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
 
-            // Priority styling
             if parent.priorityPIDs.contains(poiAnn.poi.pid.uppercased()) {
                 view.markerTintColor = .systemBlue
                 view.glyphImage = UIImage(systemName: "star.fill")

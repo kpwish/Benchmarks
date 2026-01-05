@@ -18,7 +18,18 @@ enum POILoader {
     }
 
     static func loadCSVFromFile(url: URL) throws -> [POI] {
-        let text = try String(contentsOf: url, encoding: .utf8)
+        // Load raw bytes from disk
+        let data = try Data(contentsOf: url)
+
+        // Decode explicitly as UTF-8
+        guard let text = String(data: data, encoding: .utf8) else {
+            throw NSError(
+                domain: "POILoader",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "CSV file is not valid UTF-8"]
+            )
+        }
+
         return parseCSV(text)
     }
 
