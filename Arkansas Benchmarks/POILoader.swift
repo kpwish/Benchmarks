@@ -1,10 +1,3 @@
-//
-//  POILoader.swift
-//  Arkansas Benchmarks
-//
-//  Created by Kevin Wish on 12/21/25.
-//
-
 import Foundation
 
 enum POILoader {
@@ -23,16 +16,64 @@ enum POILoader {
             return []
         }
     }
-    static func loadCSVFromFile(url: URL) -> [POI] {
+
+    static func loadCSVFromFile(url: URL) throws -> [POI] {
+        let text = try String(contentsOf: url, encoding: .utf8)
+        return parseCSV(text)
+    }
+
+    // MARK: - Priority PID loading
+
+    /// Loads `priority.csv` from the bundle and returns a Set of PIDs.
+    /// Supported formats:
+    /// - One PID per line
+    /// - Optional header row (e.g. "pid")
+    /// - CSV rows where PID is the first column
+    static func loadPriorityPIDSetFromBundle(named filename: String = "priority", ext: String = "csv") -> Set<String> {
+        guard let url = Bundle.main.url(forResource: filename, withExtension: ext) else {
+            print("Missing \(filename).\(ext) in app bundle.")
+            return []
+        }
+
         do {
             let text = try String(contentsOf: url, encoding: .utf8)
-            return parseCSV(text)
+            return parsePIDList(text)
         } catch {
-            print("Failed to read CSV at \(url): \(error)")
+            print("Failed to read \(filename).\(ext): \(error)")
             return []
         }
     }
-    
+
+    private static func parsePIDList(_ text: String) -> Set<String> {
+        let lines = text
+            .split(whereSeparator: \.isNewline)
+            .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+
+        guard !lines.isEmpty else { return [] }
+
+        var result = Set<String>()
+        result.reserveCapacity(min(lines.count, 10_000))
+
+        for line in lines {
+            // Allow CSV style rows; take first field
+            let fields = splitCSVLine(line)
+            guard let first = fields.first else { continue }
+
+            let pid = normalizeValue(first)
+                .uppercased()
+
+            if pid.isEmpty { continue }
+            if pid == "PID" { continue } // ignore optional header
+
+            result.insert(pid)
+        }
+
+        return result
+    }
+
+    // MARK: - POI CSV parsing (existing)
+
     /// Parses CSV with:
     /// - header-based column lookup (supports both old and new schemas)
     /// - quoted field support (commas inside quotes)
@@ -117,7 +158,6 @@ enum POILoader {
             let lastYear: Int? = field(iLastRecv).flatMap { Int($0) }
             let ortho: Double? = field(iOrthoHt).flatMap { Double($0) }
 
-            // Construct POI with your expanded model
             pois.append(
                 POI(
                     pid: pid,
@@ -192,7 +232,6 @@ enum POILoader {
     }
 
     private static func normalizeValue(_ s: String) -> String {
-        // Trim + collapse repeated whitespace (cleans padded COUNTY/marker strings)
         let trimmed = s.trimmingCharacters(in: .whitespacesAndNewlines)
         return trimmed.replacingOccurrences(of: #"[\s]+"#, with: " ", options: .regularExpression)
     }

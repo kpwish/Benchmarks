@@ -7,7 +7,6 @@ struct ContentView: View {
     // IMPORTANT: GitHub Releases manifest URL
     private static let manifestURL = URL(string: "https://github.com/kpwish/Benchmarks/releases/latest/download/manifest.json")!
 
-    // Download manager lives here (top-level), so Settings and Info can reference it.
     @StateObject private var statePacks = StatePackManager(
         manifestURL: ContentView.manifestURL,
         maxActiveStates: 2,
@@ -16,8 +15,11 @@ struct ContentView: View {
         ]
     )
 
-    // Fallback (immediate display) while state packs load.
     @State private var bundledArkansasPOIs: [POI] = POILoader.loadCSVFromBundle(named: "pois", ext: "csv")
+
+    // Priority list
+    @State private var priorityPIDs: Set<String> = POILoader.loadPriorityPIDSetFromBundle(named: "priority", ext: "csv")
+    @AppStorage("priorityOnlyEnabled") private var priorityOnlyEnabled: Bool = false
 
     @State private var selectedPOI: POI?
     @State private var isFollowingUser = true
@@ -25,21 +27,19 @@ struct ContentView: View {
     @State private var filters: POIFilters = .empty
     @State private var showingFilters = false
 
-    // Map style + zoom commands
     @State private var mapStyle: MapStyle = .standard
     @State private var zoomAction: MapZoomAction? = nil
 
-    // Info + Settings sheets
     @State private var showingInfo = false
     @State private var showingSettings = false
 
-    // Screen always on
     @AppStorage("keepScreenAwake") private var keepScreenAwake: Bool = false
 
     var body: some View {
         ZStack {
             POIMapView(
                 allPOIs: filteredPOIs,
+                priorityPIDs: priorityPIDs,
                 selectedPOI: $selectedPOI,
                 isFollowingUser: $isFollowingUser,
                 mapStyle: $mapStyle,
@@ -50,13 +50,8 @@ struct ContentView: View {
                 applyIdleTimerSetting()
             }
             .task {
-                // Ensure at least AR is active for a good first-run experience.
                 statePacks.ensureDefaultActiveStateIfEmpty(defaultCode: "AR")
-
-                // Load whatever the user previously selected (max 2 enforced).
                 await statePacks.loadPersistedActiveStates()
-
-                // Preload manifest so Downloads is populated quickly.
                 await statePacks.refreshManifest()
             }
             .ignoresSafeArea()
@@ -88,7 +83,6 @@ struct ContentView: View {
             VStack {
                 Spacer()
 
-                // Right-side controls (recenter + zoom), lifted above the pill row
                 HStack {
                     Spacer()
                     rightMapControls
@@ -96,7 +90,6 @@ struct ContentView: View {
                 .padding(.trailing, 12)
                 .padding(.bottom, 98)
 
-                // Bottom area (settings CTA + full-width pill row)
                 VStack(spacing: 10) {
                     if shouldShowSettingsCTA {
                         settingsBanner
@@ -112,13 +105,17 @@ struct ContentView: View {
 
     // MARK: - POI source
 
-    private var pois: [POI] {
-        // Prefer active state packs once loaded; fallback to bundled AR for immediate display.
+    private var allLoadedPOIs: [POI] {
         let union = statePacks.activePOIsUnion
         return union.isEmpty ? bundledArkansasPOIs : union
     }
 
-    // MARK: - Full-width Bottom Pill Row (icons only)
+    private var displayBasePOIs: [POI] {
+        guard priorityOnlyEnabled, !priorityPIDs.isEmpty else { return allLoadedPOIs }
+        return allLoadedPOIs.filter { priorityPIDs.contains($0.pid.uppercased()) }
+    }
+
+    // MARK: - Full-width Bottom Pill Row
 
     private var bottomPillRowFullWidth: some View {
         HStack(spacing: 0) {
@@ -243,9 +240,32 @@ struct ContentView: View {
                         .foregroundStyle(.secondary)
                 }
 
+                Section("Priority") {
+                    Toggle(isOn: $priorityOnlyEnabled) {
+                        Label("Priority Only", systemImage: "star.fill")
+                    }
+                    .tint(.blue)
+
+                    if priorityPIDs.isEmpty {
+                        Text("No priority.csv found in the app bundle, or it contains no PIDs.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text("When enabled, only PIDs listed in priority.csv will be displayed. (\(priorityPIDs.count) PIDs)")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
                 Section("Data") {
                     NavigationLink {
                         DownloadsView(manager: statePacks)
+                            .onAppear {
+                                // Performance: tighten map region while downloading/activating
+                                isFollowingUser = true
+                                // If you later add resetFollowZoom, you can trigger it here as well.
+                                // zoomAction = .resetFollowZoom
+                            }
                     } label: {
                         Label("Downloads", systemImage: "arrow.down.circle")
                     }
@@ -276,31 +296,27 @@ struct ContentView: View {
             List {
                 Section("Status") {
                     row("Location", value: locationStatusText)
-
                     if locationManager.isAuthorized {
                         row("Mode", value: isFollowingUser ? "Following" : "Free roam")
                     }
                 }
 
                 Section("POIs") {
-                    if filters.isActive {
-                        row("Displayed", value: "\(filteredPOIs.count)")
-                        row("Total loaded", value: "\(pois.count)")
-                    } else {
-                        row("Loaded", value: "\(pois.count)")
-                    }
+                    row("Displayed", value: "\(filteredPOIs.count)")
+                    row("Loaded", value: "\(allLoadedPOIs.count)")
                 }
 
-                Section("Data Packs") {
-                    row("Active states", value: statePacks.activeStates.isEmpty ? "None" : statePacks.activeStates.joined(separator: ", "))
-                    row("Active limit", value: "\(statePacks.maxActiveStates)")
+                if !priorityPIDs.isEmpty {
+                    Section("Priority") {
+                        row("Priority only", value: priorityOnlyEnabled ? "On" : "Off")
+                        row("Priority PIDs", value: "\(priorityPIDs.count)")
+                    }
                 }
 
                 if filters.isActive {
                     Section("Filters") {
                         Text("Filters are currently active.")
                             .foregroundStyle(.secondary)
-
                         Button(role: .destructive) {
                             clearFilters()
                         } label: {
@@ -331,18 +347,12 @@ struct ContentView: View {
 
     private var locationStatusText: String {
         switch locationManager.authorizationStatus {
-        case .notDetermined:
-            return "Requesting permission…"
-        case .restricted:
-            return "Restricted"
-        case .denied:
-            return "Denied"
-        case .authorizedWhenInUse:
-            return "When In Use"
-        case .authorizedAlways:
-            return "Always"
-        @unknown default:
-            return "Unknown"
+        case .notDetermined: return "Requesting permission…"
+        case .restricted: return "Restricted"
+        case .denied: return "Denied"
+        case .authorizedWhenInUse: return "When In Use"
+        case .authorizedAlways: return "Always"
+        @unknown default: return "Unknown"
         }
     }
 
@@ -365,9 +375,7 @@ struct ContentView: View {
                 .accessibilityLabel("Recenter")
             }
 
-            Button {
-                zoomAction = .zoomIn
-            } label: {
+            Button { zoomAction = .zoomIn } label: {
                 Image(systemName: "plus")
                     .font(.system(size: 16, weight: .semibold))
                     .padding(12)
@@ -378,9 +386,7 @@ struct ContentView: View {
             .shadow(radius: 2)
             .accessibilityLabel("Zoom in")
 
-            Button {
-                zoomAction = .zoomOut
-            } label: {
+            Button { zoomAction = .zoomOut } label: {
                 Image(systemName: "minus")
                     .font(.system(size: 16, weight: .semibold))
                     .padding(12)
@@ -431,11 +437,14 @@ struct ContentView: View {
     // MARK: - Filtering
 
     private var filterOptions: FilterOptions {
-        let markers = Array(Set(pois.compactMap { $0.marker }.filter { !$0.isEmpty })).sorted()
-        let settings = Array(Set(pois.compactMap { $0.setting }.filter { !$0.isEmpty })).sorted()
-        let lastConds = Array(Set(pois.compactMap { $0.lastCondition }.filter { !$0.isEmpty })).sorted()
+        // Build options from what’s eligible to be displayed (so options stay relevant in priority-only mode)
+        let base = displayBasePOIs
 
-        let years = pois.compactMap { $0.lastRecoveredYear }
+        let markers = Array(Set(base.compactMap { $0.marker }.filter { !$0.isEmpty })).sorted()
+        let settings = Array(Set(base.compactMap { $0.setting }.filter { !$0.isEmpty })).sorted()
+        let lastConds = Array(Set(base.compactMap { $0.lastCondition }.filter { !$0.isEmpty })).sorted()
+
+        let years = base.compactMap { $0.lastRecoveredYear }
         let yearRange: ClosedRange<Int>? = {
             guard let minY = years.min(), let maxY = years.max() else { return nil }
             return minY...maxY
@@ -445,8 +454,9 @@ struct ContentView: View {
     }
 
     private var filteredPOIs: [POI] {
-        guard filters.isActive else { return pois }
-        return pois.filter { matches($0, filters: filters) }
+        let base = displayBasePOIs
+        guard filters.isActive else { return base }
+        return base.filter { matches($0, filters: filters) }
     }
 
     private func matches(_ poi: POI, filters: POIFilters) -> Bool {

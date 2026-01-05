@@ -1,13 +1,6 @@
-//
-//  POIMapView.swift
-//  Arkansas Benchmarks
-//
-//  Created by Kevin Wish on 12/21/25.
-//
-
-
 import SwiftUI
 import MapKit
+import UIKit
 
 enum MapStyle: String, CaseIterable {
     case standard
@@ -22,11 +15,11 @@ enum MapZoomAction: Equatable {
 
 struct POIMapView: UIViewRepresentable {
     let allPOIs: [POI]
+    let priorityPIDs: Set<String>
 
     @Binding var selectedPOI: POI?
     @Binding var isFollowingUser: Bool
 
-    // NEW
     @Binding var mapStyle: MapStyle
     @Binding var zoomAction: MapZoomAction?
 
@@ -37,14 +30,11 @@ struct POIMapView: UIViewRepresentable {
         map.showsUserLocation = true
         map.userTrackingMode = .follow
 
-        // Standard MapKit controls (HIG-friendly)
         map.showsCompass = true
         map.showsScale = true
 
-        // Optional: hide Apple built-in POIs so yours stand out
         map.pointOfInterestFilter = .excludingAll
 
-        // Gesture detection: stop following when user interacts
         let pan = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.userDidGesture))
         pan.delegate = context.coordinator
         map.addGestureRecognizer(pan)
@@ -58,7 +48,7 @@ struct POIMapView: UIViewRepresentable {
         map.addGestureRecognizer(rotate)
 
         context.coordinator.mapView = map
-        context.coordinator.applyMapStyle(mapStyle) // initial style
+        context.coordinator.applyMapStyle(mapStyle)
 
         return map
     }
@@ -67,19 +57,15 @@ struct POIMapView: UIViewRepresentable {
         context.coordinator.parent = self
         context.coordinator.mapView = map
 
-        // Tracking mode
         let desiredMode: MKUserTrackingMode = isFollowingUser ? .follow : .none
         if map.userTrackingMode != desiredMode {
             map.setUserTrackingMode(desiredMode, animated: true)
         }
 
-        // Apply map style if changed
         context.coordinator.applyMapStyle(mapStyle)
 
-        // Perform zoom action if requested
         if let action = zoomAction {
             context.coordinator.performZoom(action)
-            // Reset the action to avoid repeating
             DispatchQueue.main.async {
                 self.zoomAction = nil
             }
@@ -126,28 +112,13 @@ struct POIMapView: UIViewRepresentable {
         func applyMapStyle(_ style: MapStyle) {
             guard let mapView else { return }
 
-            // Use MKMapConfiguration when available; falls back to mapType if desired.
             switch style {
             case .standard:
-                if #available(iOS 13.0, *) {
-                    mapView.preferredConfiguration = MKStandardMapConfiguration()
-                } else {
-                    mapView.mapType = .standard
-                }
-
+                mapView.preferredConfiguration = MKStandardMapConfiguration()
             case .satellite:
-                if #available(iOS 13.0, *) {
-                    mapView.preferredConfiguration = MKImageryMapConfiguration()
-                } else {
-                    mapView.mapType = .satellite
-                }
-
+                mapView.preferredConfiguration = MKImageryMapConfiguration()
             case .hybrid:
-                if #available(iOS 13.0, *) {
-                    mapView.preferredConfiguration = MKHybridMapConfiguration()
-                } else {
-                    mapView.mapType = .hybrid
-                }
+                mapView.preferredConfiguration = MKHybridMapConfiguration()
             }
         }
 
@@ -158,7 +129,6 @@ struct POIMapView: UIViewRepresentable {
 
             var region = mapView.region
 
-            // Clamp deltas to avoid unusable extremes
             let minDelta: CLLocationDegrees = 0.0005
             let maxDelta: CLLocationDegrees = 90.0
 
@@ -231,8 +201,18 @@ struct POIMapView: UIViewRepresentable {
             view.annotation = poiAnn
             view.canShowCallout = true
             view.clusteringIdentifier = "poi-cluster"
-
             view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+
+            // Priority styling
+            if parent.priorityPIDs.contains(poiAnn.poi.pid.uppercased()) {
+                view.markerTintColor = .systemBlue
+                view.glyphImage = UIImage(systemName: "star.fill")
+            } else {
+                // Default MapKit red marker; set nil so the system chooses the standard appearance.
+                view.markerTintColor = nil
+                view.glyphImage = nil
+            }
+
             return view
         }
 
