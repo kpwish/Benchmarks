@@ -20,7 +20,8 @@ struct ContentView: View {
     // Priority list
     @State private var priorityPIDs: Set<String> = POILoader.loadPriorityPIDSetFromBundle(named: "priority", ext: "csv")
     @AppStorage("priorityOnlyEnabled") private var priorityOnlyEnabled: Bool = false
-
+    @AppStorage("showPriorityPOIs") private var showPriorityPOIs: Bool = true
+    
     @State private var selectedPOI: POI?
     @State private var isFollowingUser = true
 
@@ -40,11 +41,13 @@ struct ContentView: View {
             POIMapView(
                 allPOIs: filteredPOIs,
                 priorityPIDs: priorityPIDs,
+                showPriorityPOIs: showPriorityPOIs,   // ← ADD THIS
                 selectedPOI: $selectedPOI,
                 isFollowingUser: $isFollowingUser,
                 mapStyle: $mapStyle,
                 zoomAction: $zoomAction
             )
+
             .onAppear {
                 locationManager.start()
                 applyIdleTimerSetting()
@@ -81,12 +84,11 @@ struct ContentView: View {
             }
 
             // TOP LEGEND
-            if !priorityOnlyEnabled {
+            if showPriorityPOIs && !priorityOnlyEnabled {
                 VStack {
                     legendView
                         .padding(.top, 10)
                         .padding(.horizontal, 12)
-
                     Spacer()
                 }
             }
@@ -282,12 +284,29 @@ struct ContentView: View {
                 }
 
                 Section("Priority") {
+
+                    Toggle(isOn: $showPriorityPOIs) {
+                        Label("Show Priority POIs", systemImage: "star.circle")
+                    }
+                    .tint(.blue)
+                    .onChange(of: showPriorityPOIs) { _, newValue in
+                        if !newValue {
+                            // Priority Only cannot be active if priority display is off
+                            priorityOnlyEnabled = false
+                        }
+                    }
+
                     Toggle(isOn: $priorityOnlyEnabled) {
                         Label("Priority Only", systemImage: "star.fill")
                     }
                     .tint(.blue)
+                    .disabled(!showPriorityPOIs)
 
-                    if priorityPIDs.isEmpty {
+                    if !showPriorityPOIs {
+                        Text("Priority benchmarks are hidden and shown as standard markers.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    } else if priorityPIDs.isEmpty {
                         Text("No priority.csv found in the app bundle, or it contains no PIDs.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)

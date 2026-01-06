@@ -16,7 +16,8 @@ enum MapZoomAction: Equatable {
 struct POIMapView: UIViewRepresentable {
     let allPOIs: [POI]
     let priorityPIDs: Set<String>
-
+    let showPriorityPOIs: Bool
+    
     @Binding var selectedPOI: POI?
     @Binding var isFollowingUser: Bool
 
@@ -32,7 +33,6 @@ struct POIMapView: UIViewRepresentable {
 
         map.showsCompass = true
         map.showsScale = true
-
         map.pointOfInterestFilter = .excludingAll
 
         let pan = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.userDidGesture))
@@ -50,6 +50,9 @@ struct POIMapView: UIViewRepresentable {
         context.coordinator.mapView = map
         context.coordinator.applyMapStyle(mapStyle)
 
+        // Initial render: schedule a refresh once the map has a region.
+        context.coordinator.scheduleRefresh(reason: "initial")
+
         return map
     }
 
@@ -57,21 +60,32 @@ struct POIMapView: UIViewRepresentable {
         context.coordinator.parent = self
         context.coordinator.mapView = map
 
+        // Follow mode update
         let desiredMode: MKUserTrackingMode = isFollowingUser ? .follow : .none
         if map.userTrackingMode != desiredMode {
             map.setUserTrackingMode(desiredMode, animated: true)
+            context.coordinator.scheduleRefresh(reason: "trackingModeChanged")
         }
 
+        // Map style update
         context.coordinator.applyMapStyle(mapStyle)
 
+        // Zoom action
         if let action = zoomAction {
             context.coordinator.performZoom(action)
             DispatchQueue.main.async {
                 self.zoomAction = nil
             }
+            context.coordinator.scheduleRefresh(reason: "zoomAction")
         }
 
-        context.coordinator.refreshAnnotations(for: map)
+        // Data changes (state activation, downloads, priority set updates)
+        if context.coordinator.noteDatasetChange(allPOIs: allPOIs, priorityPIDs: priorityPIDs) {
+            context.coordinator.scheduleRefresh(reason: "datasetChanged")
+        }
+
+        // Important: do NOT call refreshAnnotations() here unconditionally.
+        // Refresh is driven by debounced region changes and explicit triggers above.
     }
 
     func makeCoordinator() -> Coordinator {
@@ -87,6 +101,22 @@ struct POIMapView: UIViewRepresentable {
         private var visibleIDs = Set<String>()
         private let poiReuseID = "POIMarker"
         private let clusterReuseID = "Cluster"
+
+        // Debounce
+        private var pendingRefreshWork: DispatchWorkItem?
+
+        // Dataset change tracking
+        private var lastPOICount: Int = -1
+        private var lastPOISignature: UInt64 = 0
+        private var lastPriorityCount: Int = -1
+
+        // Policy A threshold: when zoomed out beyond this span, show priority only.
+        // Tune as desired. ~0.25° latitude is ~17 miles N/S.
+        private let priorityOnlyLatitudeDeltaThreshold: CLLocationDegrees = 0.25
+
+        // Limit for safety (avoid trying to add too many annotations at once).
+        // This is not a hard UI rule, just a protective cap for one refresh pass.
+        private let maxAnnotationsToAddPerRefresh = 2500
 
         init(parent: POIMapView) {
             self.parent = parent
@@ -105,7 +135,8 @@ struct POIMapView: UIViewRepresentable {
         }
 
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-            refreshAnnotations(for: mapView)
+            // Debounce expensive work while the user is actively panning/zooming.
+            scheduleRefresh(reason: "regionChanged")
         }
 
         // MARK: - Map Style
@@ -132,7 +163,6 @@ struct POIMapView: UIViewRepresentable {
 
             let minDelta: CLLocationDegrees = 0.0005
             let maxDelta: CLLocationDegrees = 90.0
-
             let factor: CLLocationDegrees = (action == .zoomIn) ? 0.5 : 2.0
 
             region.span.latitudeDelta = max(min(region.span.latitudeDelta * factor, maxDelta), minDelta)
@@ -141,9 +171,95 @@ struct POIMapView: UIViewRepresentable {
             mapView.setRegion(region, animated: true)
         }
 
-        // MARK: - Annotation Management
+        // MARK: - Dataset change tracking
+
+        /// Returns true if the POI dataset or priority PID set changed materially.
+        func noteDatasetChange(allPOIs: [POI], priorityPIDs: Set<String>) -> Bool {
+            var changed = false
+
+            if allPOIs.count != lastPOICount {
+                lastPOICount = allPOIs.count
+                changed = true
+            }
+
+            // Compute a lightweight signature without iterating every POI.
+            // Use a few sample IDs to detect changes (good enough for UI refresh triggers).
+            let sig = computePOISignature(allPOIs)
+            if sig != lastPOISignature {
+                lastPOISignature = sig
+                changed = true
+            }
+
+            if priorityPIDs.count != lastPriorityCount {
+                lastPriorityCount = priorityPIDs.count
+                changed = true
+            }
+
+            return changed
+        }
+
+        private func computePOISignature(_ pois: [POI]) -> UInt64 {
+            // Sample up to 16 elements across the array
+            guard !pois.isEmpty else { return 0 }
+
+            let sampleCount = min(16, pois.count)
+            var acc: UInt64 = UInt64(pois.count)
+
+            for i in 0..<sampleCount {
+                let idx = (i * max(1, pois.count / sampleCount))
+                let id = pois[idx].id
+                acc ^= fnv1a64(id)
+            }
+            return acc
+        }
+
+        private func fnv1a64(_ s: String) -> UInt64 {
+            // Simple FNV-1a 64-bit over UTF-8 bytes
+            let prime: UInt64 = 1099511628211
+            var hash: UInt64 = 14695981039346656037
+            for b in s.utf8 {
+                hash ^= UInt64(b)
+                hash &*= prime
+            }
+            return hash
+        }
+
+        // MARK: - Debounced Refresh
+
+        func scheduleRefresh(reason: String) {
+            guard let mapView else { return }
+
+            pendingRefreshWork?.cancel()
+
+            let work = DispatchWorkItem { [weak self, weak mapView] in
+                guard let self, let mapView else { return }
+                self.refreshAnnotations(for: mapView)
+            }
+            pendingRefreshWork = work
+
+            // 200ms debounce: smooths out rapid region changes
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.20, execute: work)
+        }
+
+        // MARK: - Annotation Management (Policy A)
 
         func refreshAnnotations(for mapView: MKMapView) {
+            // Determine which dataset should be eligible based on zoom level (Policy A).
+            let region = mapView.region
+            let zoomedOut = region.span.latitudeDelta >= priorityOnlyLatitudeDeltaThreshold
+
+            // Policy A: when zoomed out, show PRIORITY only (if any).
+            let eligiblePOIs: [POI]
+            if zoomedOut, !parent.priorityPIDs.isEmpty {
+                eligiblePOIs = parent.allPOIs.filter { parent.priorityPIDs.contains($0.pid.uppercased()) }
+            } else if zoomedOut {
+                // If there are no priority PIDs, fall back to showing nothing when zoomed out.
+                eligiblePOIs = []
+            } else {
+                // Zoomed in: show everything.
+                eligiblePOIs = parent.allPOIs
+            }
+
             let visible = mapView.visibleMapRect
             let paddedRect = visible.insetBy(dx: -visible.size.width * 0.30,
                                              dy: -visible.size.height * 0.30)
@@ -154,7 +270,8 @@ struct POIMapView: UIViewRepresentable {
             var annotationsToAdd: [POIAnnotation] = []
             annotationsToAdd.reserveCapacity(300)
 
-            for poi in parent.allPOIs {
+            // Scan eligible only (still O(M), but M is reduced dramatically when zoomed out).
+            for poi in eligiblePOIs {
                 let point = MKMapPoint(poi.coordinate)
                 guard paddedRect.contains(point) else { continue }
 
@@ -162,9 +279,13 @@ struct POIMapView: UIViewRepresentable {
 
                 if !visibleIDs.contains(poi.id) {
                     annotationsToAdd.append(POIAnnotation(poi: poi))
+                    if annotationsToAdd.count >= maxAnnotationsToAddPerRefresh {
+                        break
+                    }
                 }
             }
 
+            // Remove POIs that are no longer visible/eligible
             let idsToRemove = visibleIDs.subtracting(nowVisibleIDs)
             if !idsToRemove.isEmpty {
                 let toRemove = mapView.annotations.compactMap { ann -> MKAnnotation? in
@@ -183,12 +304,12 @@ struct POIMapView: UIViewRepresentable {
             visibleIDs = nowVisibleIDs
         }
 
-        // MARK: - Annotation Views (clustering always on)
+        // MARK: - Annotation Views (clustering always on, blue if any priority member)
 
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             if annotation is MKUserLocation { return nil }
 
-            // CLUSTER VIEW (tint blue if any member is priority)
+            // CLUSTER VIEW
             if let cluster = annotation as? MKClusterAnnotation {
                 let view = (mapView.dequeueReusableAnnotationView(withIdentifier: clusterReuseID) as? MKMarkerAnnotationView)
                     ?? MKMarkerAnnotationView(annotation: cluster, reuseIdentifier: clusterReuseID)
@@ -196,10 +317,13 @@ struct POIMapView: UIViewRepresentable {
                 view.annotation = cluster
                 view.canShowCallout = true
 
-                let hasPriorityMember = cluster.memberAnnotations.contains { member in
-                    guard let poiAnn = member as? POIAnnotation else { return false }
-                    return parent.priorityPIDs.contains(poiAnn.poi.pid.uppercased())
-                }
+                // Tint blue if any cluster member is priority
+                let hasPriorityMember =
+                    parent.showPriorityPOIs &&
+                    cluster.memberAnnotations.contains { member in
+                        guard let poiAnn = member as? POIAnnotation else { return false }
+                        return parent.priorityPIDs.contains(poiAnn.poi.pid.uppercased())
+                    }
 
                 if hasPriorityMember {
                     view.markerTintColor = .systemBlue
@@ -223,11 +347,14 @@ struct POIMapView: UIViewRepresentable {
             view.clusteringIdentifier = "poi-cluster"
             view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
 
-            if parent.priorityPIDs.contains(poiAnn.poi.pid.uppercased()) {
+            let isPriority =
+                parent.showPriorityPOIs &&
+                parent.priorityPIDs.contains(poiAnn.poi.pid.uppercased())
+            if isPriority {
                 view.markerTintColor = .systemBlue
                 view.glyphImage = UIImage(systemName: "star.fill")
             } else {
-                // Default MapKit red marker; set nil so the system chooses the standard appearance.
+                // Default system marker style (red)
                 view.markerTintColor = nil
                 view.glyphImage = nil
             }
