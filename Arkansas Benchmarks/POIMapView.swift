@@ -24,6 +24,12 @@ struct POIMapView: UIViewRepresentable {
     @Binding var mapStyle: MapStyle
     @Binding var zoomAction: MapZoomAction?
 
+    // MARK: - Cluster selection support (Option A)
+    // When a cluster is tapped (especially at maximum zoom where clusters may not break apart),
+    // we surface its member POIs to SwiftUI so the parent view can present a chooser.
+    @Binding var clusterPOIs: [POI]
+    @Binding var isClusterSheetPresented: Bool
+
     func makeUIView(context: Context) -> MKMapView {
         let map = MKMapView(frame: .zero)
 
@@ -370,6 +376,27 @@ struct POIMapView: UIViewRepresentable {
         }
 
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            // Option A: If a cluster is selected, present a SwiftUI sheet listing member POIs.
+            // This solves the "can't tap an individual POI" problem when points are too dense
+            // or share identical coordinates at max zoom.
+            if let cluster = view.annotation as? MKClusterAnnotation {
+                let pois: [POI] = cluster.memberAnnotations.compactMap { member in
+                    guard let poiAnn = member as? POIAnnotation else { return nil }
+                    return poiAnn.poi
+                }
+                .sorted { $0.pid < $1.pid }
+
+                if !pois.isEmpty {
+                    parent.clusterPOIs = pois
+                    parent.isClusterSheetPresented = true
+                }
+
+                // Deselect to avoid a lingering highlighted cluster.
+                mapView.deselectAnnotation(cluster, animated: true)
+                return
+            }
+
+            // Individual POI selection
             if let poiAnn = view.annotation as? POIAnnotation {
                 parent.selectedPOI = poiAnn.poi
             }

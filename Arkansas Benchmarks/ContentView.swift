@@ -23,6 +23,10 @@ struct ContentView: View {
     @AppStorage("showPriorityPOIs") private var showPriorityPOIs: Bool = true
     
     @State private var selectedPOI: POI?
+
+    // Cluster selection support (Option A)
+    @State private var clusterPOIs: [POI] = []
+    @State private var isClusterSheetPresented: Bool = false
     @State private var isFollowingUser = true
 
     @State private var filters: POIFilters = .empty
@@ -45,9 +49,10 @@ struct ContentView: View {
                 selectedPOI: $selectedPOI,
                 isFollowingUser: $isFollowingUser,
                 mapStyle: $mapStyle,
-                zoomAction: $zoomAction
+                zoomAction: $zoomAction,
+                clusterPOIs: $clusterPOIs,
+                isClusterSheetPresented: $isClusterSheetPresented
             )
-
             .onAppear {
                 locationManager.start()
                 applyIdleTimerSetting()
@@ -58,6 +63,46 @@ struct ContentView: View {
                 await statePacks.refreshManifest()
             }
             .ignoresSafeArea()
+
+            .sheet(isPresented: $isClusterSheetPresented) {
+                NavigationStack {
+                    List {
+                        if clusterPOIs.isEmpty {
+                            Text("No benchmarks available in this cluster.")
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Section("Benchmarks in this area") {
+                                ForEach(clusterPOIs, id: \.pid) { poi in
+                                    Button {
+                                        // Dismiss cluster list first, then present POI detail
+                                        isClusterSheetPresented = false
+                                        DispatchQueue.main.async {
+                                            selectedPOI = poi
+                                        }
+                                    } label: {
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text(poi.name.isEmpty ? poi.pid : poi.name)
+                                                .font(.body.weight(.semibold))
+                                                .foregroundStyle(.primary)
+                                            Text(poi.pid)
+                                                .font(.footnote.monospaced())
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        .padding(.vertical, 2)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .navigationTitle("Cluster Results")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { isClusterSheetPresented = false }
+                        }
+                    }
+                }
+            }
             .sheet(item: $selectedPOI) { poi in
                 POIDetailView(poi: poi, locationManager: locationManager)
             }
