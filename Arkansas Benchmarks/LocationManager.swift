@@ -11,6 +11,13 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     // Heading support
     @Published private(set) var heading: CLHeading?
 
+    // Track whether we are actively running updates
+    private var isUpdatingLocation = false
+
+    // Only run heading updates when at least one view needs it
+    private var headingConsumers: Int = 0
+    private var isUpdatingHeading: Bool = false
+
     var isAuthorized: Bool {
         authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways
     }
@@ -34,23 +41,34 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     private var trackingMode: TrackingMode = .normal
 
-    /// Adjusts CLLocationManager settings without requiring a restart.
+    /// Adjusts CLLocationManager settings (foreground only).
     /// - normal: balanced updates
     /// - nearTarget: more frequent updates for close-range navigation
     func setTrackingMode(_ mode: TrackingMode) {
         guard trackingMode != mode else { return }
         trackingMode = mode
 
+        applyTrackingModeSettings(mode)
+
+        // If we are currently updating location, restart to ensure settings take effect immediately.
+        // (Not strictly required, but helps on some devices/OS versions.)
+        if isUpdatingLocation {
+            manager.stopUpdatingLocation()
+            manager.startUpdatingLocation()
+        }
+    }
+
+    private func applyTrackingModeSettings(_ mode: TrackingMode) {
         switch mode {
         case .normal:
             manager.desiredAccuracy = kCLLocationAccuracyBest
-            manager.distanceFilter = 10          // meters (your default)
-            manager.headingFilter = 5            // degrees (your default)
+            manager.distanceFilter = 10          // meters
+            manager.headingFilter = 5            // degrees
 
         case .nearTarget:
             manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-            manager.distanceFilter = 1           // meters (higher frequency)
-            manager.headingFilter = 1            // degrees (more responsive arrow)
+            manager.distanceFilter = 1           // meters
+            manager.headingFilter = 1            // degrees
         }
     }
 
@@ -60,37 +78,96 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
         manager.delegate = self
 
+        // Prevent background tracking unless you explicitly choose to enable it.
+        manager.allowsBackgroundLocationUpdates = false
+        manager.pausesLocationUpdatesAutomatically = true
+
         // Defaults (normal mode)
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.distanceFilter = 10
-        manager.headingFilter = 5
+        applyTrackingModeSettings(.normal)
     }
 
+    // MARK: - Public lifecycle API
+
+    /// Call this once at app start (e.g., ContentView.onAppear) to request permissions / begin.
     func start() {
+        // If we don't have permission yet, request it.
         if authorizationStatus == .notDetermined {
             manager.requestWhenInUseAuthorization()
             return
         }
 
+        // If authorized, start foreground updates (but do NOT start heading unless requested).
         if isAuthorized {
-            // Always start in normal mode; feature views can temporarily switch to nearTarget.
-            setTrackingMode(.normal)
-
-            manager.startUpdatingLocation()
-
-            // Only start heading updates if available on device
-            if CLLocationManager.headingAvailable() {
-                manager.startUpdatingHeading()
-            }
+            resumeForForeground()
         } else {
-            manager.stopUpdatingLocation()
-            manager.stopUpdatingHeading()
+            suspendForBackground()
         }
     }
 
+    /// Foreground entry point: starts location updates and heading only if requested by a consumer.
+    func resumeForForeground() {
+        guard isAuthorized else { return }
+
+        // Apply current tracking mode settings
+        applyTrackingModeSettings(trackingMode)
+
+        // Ensure background location stays off unless you intentionally enable it later.
+        manager.allowsBackgroundLocationUpdates = false
+        manager.pausesLocationUpdatesAutomatically = true
+
+        if !isUpdatingLocation {
+            manager.startUpdatingLocation()
+            isUpdatingLocation = true
+        }
+
+        // Only run heading updates if at least one view needs it.
+        updateHeadingIfNeeded()
+    }
+
+    /// Background/inactive entry point: stops all hardware updates to preserve battery.
+    func suspendForBackground() {
+        if isUpdatingLocation {
+            manager.stopUpdatingLocation()
+            isUpdatingLocation = false
+        }
+
+        if isUpdatingHeading {
+            manager.stopUpdatingHeading()
+            isUpdatingHeading = false
+        }
+    }
+
+    /// Full stop (e.g., for debugging or explicit user action)
     func stop() {
-        manager.stopUpdatingLocation()
-        manager.stopUpdatingHeading()
+        suspendForBackground()
+    }
+
+    // MARK: - Heading consumer API
+
+    /// Call when a feature/view needs heading (e.g., POIRelativeLocationView onAppear).
+    func beginHeadingUpdates() {
+        headingConsumers += 1
+        updateHeadingIfNeeded()
+    }
+
+    /// Call when leaving the feature/view that needs heading (onDisappear).
+    func endHeadingUpdates() {
+        headingConsumers = max(0, headingConsumers - 1)
+        updateHeadingIfNeeded()
+    }
+
+    private func updateHeadingIfNeeded() {
+        guard CLLocationManager.headingAvailable() else { return }
+
+        let shouldRunHeading = isAuthorized && isUpdatingLocation && headingConsumers > 0
+
+        if shouldRunHeading && !isUpdatingHeading {
+            manager.startUpdatingHeading()
+            isUpdatingHeading = true
+        } else if !shouldRunHeading && isUpdatingHeading {
+            manager.stopUpdatingHeading()
+            isUpdatingHeading = false
+        }
     }
 
     // MARK: - CLLocationManagerDelegate

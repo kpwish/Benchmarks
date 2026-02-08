@@ -279,11 +279,17 @@ private struct POIRelativeLocationView: View {
             // Ensure deterministic state.
             nearTargetEnabled = false
             locationManager.setTrackingMode(.normal)
+
+            // Heading is only needed while this view is visible.
+            locationManager.beginHeadingUpdates()
         }
         .onDisappear {
             // Revert immediately when leaving (per your requirement).
             nearTargetEnabled = false
             locationManager.setTrackingMode(.normal)
+
+            // Stop heading immediately when leaving this view.
+            locationManager.endHeadingUpdates()
         }
     }
 

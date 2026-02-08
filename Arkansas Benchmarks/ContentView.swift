@@ -3,6 +3,7 @@ import UIKit
 
 struct ContentView: View {
     @StateObject private var locationManager = LocationManager()
+    @Environment(\.scenePhase) private var scenePhase
 
     // IMPORTANT: GitHub Releases manifest URL
     private static let manifestURL = URL(string: "https://github.com/kpwish/Benchmarks/releases/latest/download/manifest.json")!
@@ -56,6 +57,16 @@ struct ContentView: View {
             .onAppear {
                 locationManager.start()
                 applyIdleTimerSetting()
+            }
+            .onChange(of: scenePhase) { _, phase in
+                switch phase {
+                case .active:
+                    locationManager.resumeForForeground()
+                case .inactive, .background:
+                    locationManager.suspendForBackground()
+                @unknown default:
+                    locationManager.suspendForBackground()
+                }
             }
             .task {
                 statePacks.ensureDefaultActiveStateIfEmpty(defaultCode: "AR")
